@@ -53,8 +53,8 @@ export default function NuevaVenta() {
 
     try {
       // 1. Subir PDF a Cloudinary
-      const cloudName = "diqlh3qzl";
-      const uploadPreset = "m1_default";
+      const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
       const formDataUpload = new FormData();
       formDataUpload.append('file', pdfFile);
