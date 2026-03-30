@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Los colores y diseños ya están manejados por las clases
+   de Tailwind en tus componentes de React. */
