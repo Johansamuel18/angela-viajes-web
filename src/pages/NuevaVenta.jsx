@@ -18,7 +18,6 @@ export default function NuevaVenta() {
     nombre_archivo_pdf: ''
   });
 
-  // Cálculo en tiempo real
   const comisionCalculada = formData.monto_total
     ? (parseFloat(formData.monto_total) * 0.01).toFixed(2)
     : '0.00';
@@ -52,7 +51,6 @@ export default function NuevaVenta() {
     setIsSubmitting(true);
 
     try {
-      // 1. Subir PDF a Cloudinary
       const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
       const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
@@ -72,22 +70,20 @@ export default function NuevaVenta() {
       const cloudinaryData = await cloudinaryResponse.json();
       const pdfUrl = cloudinaryData.secure_url;
 
-      // 2. Guardar los datos de la venta en Firestore
       await addDoc(collection(db, 'ventas'), {
         ...formData,
         monto_total: monto,
         comision: parseFloat(comisionCalculada),
-        url_pdf: pdfUrl, // URL pública para descargar/ver
+        url_pdf: pdfUrl,
         createdAt: new Date().toISOString()
       });
 
-      // Mostramos la ventana emergente hermosa por 3.5 segundos
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3500);
 
       setFormData({ fecha: today, nombre_cliente: '', tipo_comprobante: 'Boleta', monto_total: '', nombre_archivo_pdf: '' });
       setPdfFile(null);
-      e.target.reset(); // Limpia el input visual de archivos
+      e.target.reset(); 
     } catch (error) {
       console.error('Error al registrar la venta:', error);
       alert('Ocurrió un error al guardar la venta. Verifica tu conexión.');
@@ -96,58 +92,104 @@ export default function NuevaVenta() {
     }
   };
 
+  const inputStyles = "w-full bg-black/20 border border-white/20 text-white placeholder-gray-400 focus:border-[#ff2a70] focus:ring-1 focus:ring-[#ff2a70] outline-none transition-all rounded-xl py-3 px-4";
+  const labelStyles = "text-sm font-medium text-gray-300 block mb-2";
+
   return (
-    <div className="max-w-2xl bg-white p-8 rounded-[2rem] border border-pink-100 shadow-sm shadow-pink-50">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Registrar Nueva Venta</h2>
+    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8 max-w-2xl">
+      <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">Registrar Nueva Venta</h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-600">Fecha</label>
-            <input type="date" name="fecha" value={formData.fecha} onChange={handleChange} required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent transition-all" />
+          <div>
+            <label className={labelStyles}>Fecha</label>
+            <input 
+              type="date" 
+              name="fecha" 
+              value={formData.fecha} 
+              onChange={handleChange} 
+              required
+              className={inputStyles + " [color-scheme:dark]"} 
+            />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-600">Tipo de Comprobante</label>
-            <select name="tipo_comprobante" value={formData.tipo_comprobante} onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white transition-all">
+          <div>
+            <label className={labelStyles}>Tipo de Comprobante</label>
+            <select 
+              name="tipo_comprobante" 
+              value={formData.tipo_comprobante} 
+              onChange={handleChange}
+              className={inputStyles + " [&>option]:bg-[#1a0512] [&>option]:text-white"}
+            >
               <option value="Boleta">Boleta</option>
               <option value="Factura">Factura</option>
             </select>
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-600">Nombre del Cliente</label>
-          <input type="text" name="nombre_cliente" value={formData.nombre_cliente} onChange={handleChange} required placeholder="Ej. Johan Tu Amor"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all" />
+        <div>
+          <label className={labelStyles}>Nombre del Cliente</label>
+          <input 
+            type="text" 
+            name="nombre_cliente" 
+            value={formData.nombre_cliente} 
+            onChange={handleChange} 
+            required 
+            placeholder="Ej. Johan Tu Amor"
+            className={inputStyles} 
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-600">Monto Total (S/)</label>
-            <input type="number" name="monto_total" value={formData.monto_total} onChange={handleChange} required placeholder="0.00" min="0" step="0.01"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all" />
+          <div>
+            <label className={labelStyles}>Monto Total (S/)</label>
+            <input 
+              type="number" 
+              name="monto_total" 
+              value={formData.monto_total} 
+              onChange={handleChange} 
+              required 
+              placeholder="0.00" 
+              min="0" 
+              step="0.01"
+              className={inputStyles} 
+            />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-pink-600">Comisión (1%) - Automático</label>
-            <input type="text" value={`S/ ${comisionCalculada}`} readOnly
-              className="w-full px-4 py-3 rounded-xl border border-pink-200 bg-pink-50/50 text-pink-600 font-bold focus:outline-none cursor-not-allowed" />
+          <div>
+            <label className="text-sm font-medium text-[#ff2a70] block mb-2">Comisión (1%) - Automático</label>
+            <input 
+              type="text" 
+              value={`S/ ${comisionCalculada}`} 
+              readOnly
+              className="w-full bg-white/10 border border-white/10 text-white placeholder-gray-400 outline-none rounded-xl py-3 px-4 cursor-not-allowed font-semibold transition-all" 
+            />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-600">Subir PDF del vuelo</label>
-          <input type="file" accept=".pdf" onChange={handleFileChange} required
-            className="w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-600 hover:file:bg-pink-100 transition-all cursor-pointer" />
+        <div>
+          <label className={labelStyles}>Subir PDF del vuelo</label>
+          <div className="relative group flex items-center bg-black/20 border border-white/20 rounded-xl overflow-hidden transition-all focus-within:border-[#ff2a70] focus-within:ring-1 focus-within:ring-[#ff2a70]">
+            <input 
+              type="file" 
+              accept=".pdf" 
+              onChange={handleFileChange} 
+              required
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+            />
+            <div className="bg-white/10 px-4 py-3 border-r border-white/10 text-white font-medium z-0 flex-shrink-0">
+              Elegir archivo
+            </div>
+            <div className="px-4 py-3 text-gray-400 truncate flex-1 z-0">
+              {formData.nombre_archivo_pdf || 'No se eligió ningún archivo'}
+            </div>
+          </div>
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-4 rounded-xl transition-all shadow-md shadow-pink-200 active:scale-[0.98] ${isSubmitting ? 'opacity-70 cursor-wait' : ''}`}
+          className={`w-full mt-8 bg-[#ff2a70] shadow-[0_0_20px_rgba(255,42,112,0.6)] text-white font-bold rounded-xl py-4 transition-all hover:bg-[#ff1461] hover:shadow-[0_0_25px_rgba(255,42,112,0.8)] active:scale-[0.98] ${isSubmitting ? 'opacity-70 cursor-wait' : ''}`}
         >
           {isSubmitting ? 'Subiendo...' : 'Guardar Venta'}
         </button>
@@ -155,15 +197,15 @@ export default function NuevaVenta() {
 
       {/* Ventana Emergente de Éxito Personalizada */}
       {showSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-          <div className="bg-white px-12 py-10 rounded-[2.5rem] shadow-2xl shadow-pink-200/80 border border-pink-100 flex flex-col items-center gap-4">
-            <div className="flex items-center gap-3 text-pink-400 mb-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md">
+          <div className="bg-white/10 backdrop-blur-2xl px-12 py-10 rounded-[2.5rem] shadow-[0_0_40px_rgba(255,42,112,0.3)] border border-white/20 flex flex-col items-center gap-4">
+            <div className="flex items-center gap-3 text-[#ff2a70] mb-2">
               <Heart className="animate-pulse" fill="currentColor" size={36} />
-              <Heart className="animate-bounce" fill="currentColor" size={56} />
+              <Heart className="animate-bounce drop-shadow-[0_0_15px_rgba(255,42,112,0.8)]" fill="currentColor" size={56} />
               <Heart className="animate-pulse" fill="currentColor" size={36} />
             </div>
-            <h3 className="text-3xl font-extrabold text-gray-800 text-center tracking-tight">¡Te amo! ✨</h3>
-            <p className="text-pink-500 font-medium text-lg text-center">
+            <h3 className="text-3xl font-extrabold text-white text-center tracking-tight drop-shadow-md">¡Te amo! ✨</h3>
+            <p className="text-gray-200 mt-2 font-medium text-lg text-center">
               Venta guardada exitosamente,<br />¡Bien hecho Amorcito!
             </p>
           </div>

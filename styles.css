@@ -1,0 +1,357 @@
+/* 
+========================================
+   VARIABLES GLOBALES
+========================================
+*/
+:root {
+    /* Tipografía y Textos */
+    --text-color: #ffffff;
+    --font-family: 'Poppins', sans-serif;
+    
+    /* Configuración de Colores (Mesh Gradient) */
+    --magenta: #cd1e6e;
+    --violet: #2b1836;
+    --orange: #eb7832;
+    
+    /* Variables de Glassmorphism */
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* 
+========================================
+   RESETEOS Y BASE
+========================================
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+body {
+    background-color: var(--violet);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; /* Mantiene la vista del Dashboard limpia y fija en 100vh */
+}
+
+/* 
+========================================
+   EFECTO MESH GRADIENT DE FONDO
+========================================
+*/
+.mesh-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.blob {
+    position: absolute;
+    filter: blur(140px); /* Desenfoque pesado para mezclar colores orgánicamente */
+    border-radius: 50%;
+    opacity: 0.85;
+    animation: float 12s ease-in-out infinite alternate; /* Floating animation */
+}
+
+.blob.magenta {
+    width: 600px;
+    height: 600px;
+    background-color: var(--magenta);
+    top: -150px;
+    left: -150px;
+}
+
+.blob.orange {
+    width: 500px;
+    height: 500px;
+    background-color: var(--orange);
+    bottom: -100px;
+    right: -50px;
+    animation-delay: -6s;
+    animation-duration: 15s;
+}
+
+.blob.violet-light {
+    width: 600px;
+    height: 600px;
+    background-color: #5d2b7d; /* Conector entre los colores base */
+    top: 25%;
+    left: 35%;
+    animation-delay: -3s;
+    animation-duration: 18s;
+}
+
+@keyframes float {
+    0% { transform: translate(0px, 0px) scale(1); }
+    100% { transform: translate(50px, 40px) scale(1.1); }
+}
+
+/* 
+========================================
+   CLASE REUTILIZABLE: GLASSMORPHISM 
+========================================
+*/
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 20px;
+}
+
+/* 
+========================================
+   LAYOUT PRINCIPAL
+========================================
+*/
+.dashboard-container {
+    width: 95%;
+    max-width: 1400px;
+    height: 90vh;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
+    z-index: 10; /* Por encima del Mesh Gradient */
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar .logo h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 50px;
+    letter-spacing: 0.5px;
+}
+
+.sidebar .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.menu-item {
+    text-decoration: none;
+    color: var(--text-color);
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(6px);
+}
+
+.menu-item.active {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    font-weight: 600;
+}
+
+/* --- Main Content Area --- */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 20px 20px 20px 0;
+    overflow-y: auto;
+}
+
+/* Scrollbar en "Main Content" estilizado */
+.main-content::-webkit-scrollbar {
+    width: 8px;
+}
+.main-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.main-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+/* --- Header --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.header-titles h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.header-titles p {
+    font-size: 1.05rem;
+    font-weight: 300;
+    opacity: 0.85;
+}
+
+.glass-select {
+    color: var(--text-color);
+    padding: 14px 24px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="20px" height="20px"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 45px;
+    border-radius: 14px;
+    transition: all 0.3s ease;
+}
+
+.glass-select:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.glass-select option {
+    background-color: var(--violet);
+    color: white;
+}
+
+/* --- KPI Grid --- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.kpi-card {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.4s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+}
+
+.kpi-title {
+    font-size: 1.05rem;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+.kpi-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+/* Tarjeta Crítica/Destacada */
+.kpi-card.highlight-card {
+    background: linear-gradient(135deg, var(--magenta), var(--orange));
+    border: none;
+    /* Resplandor exterior dinámico basado en los colores de fondo */
+    box-shadow: 0 8px 30px rgba(235, 120, 50, 0.5); 
+}
+
+.kpi-card.highlight-card:hover {
+    box-shadow: 0 15px 45px rgba(235, 120, 50, 0.7);
+    transform: translateY(-5px) scale(1.02);
+}
+
+/* --- Tabla de Datos ("Airy" Design) --- */
+.recent-sales {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.sales-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px; /* Este espacio divide cada <tr> para crear líneas tipo "Píldoras" */
+}
+
+.sales-table th {
+    text-align: left;
+    padding: 0 25px 10px 25px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Estabilizamos el background del Glassmorphism solo al <td> para poder separar las filas libremente */
+.sales-table td {
+    padding: 22px 25px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+    font-weight: 400;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+}
+
+.sales-table td.comission-col {
+    font-weight: 600;
+    color: #ffead1; /* Resalta un poco el número de comisión */
+}
+
+/* Aplicando el 'Border-Radius' solo en los bordes iniciales y finales para cerrar la forma de píldora */
+.sales-table td:first-child {
+    border-left: 1px solid var(--glass-border);
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+}
+
+.sales-table td:last-child {
+    border-right: 1px solid var(--glass-border);
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+/* Hover Transitions para la Tabla (Añade opacidad e interacción viva) */
+.sales-table tbody tr {
+    cursor: pointer;
+}
+
+.sales-table tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.18);
+}

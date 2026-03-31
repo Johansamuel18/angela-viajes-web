@@ -105,118 +105,132 @@ export default function Historial() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Sección Cabecera y Controles */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-        <h2 className="text-2xl font-bold text-gray-800">Historial de Ventas</h2>
+    <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Cabecera */}
+      <header className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
+        <div>
+          <h1 className="text-4xl font-extrabold text-white tracking-tight drop-shadow-md">Historial de Ventas</h1>
+          <p className="text-gray-400 mt-2 font-medium">Revisa, filtra y gestiona tus registros históricos.</p>
+        </div>
         
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           {/* Buscador de Cliente */}
-          <div className="relative w-full sm:w-64">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400" />
+          <div className="relative w-full sm:w-64 group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-[#ff2a70]">
+              <Search className="h-5 w-5 text-gray-500 group-focus-within:text-[#ff2a70] transition-colors" />
             </div>
             <input
               type="text"
               placeholder="Buscar cliente..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 w-full rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-400 text-sm transition-all"
+              className="pl-11 pr-4 py-3 w-full rounded-xl bg-black/30 backdrop-blur-md border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#ff2a70] focus:ring-1 focus:ring-[#ff2a70] text-sm transition-all shadow-xl"
             />
           </div>
 
           {/* Filtro por Mes */}
-          <select 
-            value={selectedMonth} 
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            className="px-4 py-2 w-full sm:w-auto rounded-xl border border-gray-200 bg-white text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
-          >
-            <option value="">Todos los meses</option>
-            {availableMonths.map(month => (
-              <option key={month} value={month}>{month}</option>
-            ))}
-          </select>
+          <div className="relative group">
+            <select 
+              value={selectedMonth} 
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="appearance-none px-5 py-3 w-full sm:w-auto rounded-xl border border-white/20 bg-black/30 backdrop-blur-md text-white focus:outline-none focus:border-[#ff2a70] focus:ring-1 focus:ring-[#ff2a70] text-sm shadow-xl font-medium transition-all [&>option]:bg-[#1a0512] [&>option]:text-white cursor-pointer pr-10"
+            >
+              <option value="">Todos los meses</option>
+              {availableMonths.map(month => (
+                <option key={month} value={month}>{month}</option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/50 group-hover:text-white/80 transition-colors">
+              ▼
+            </div>
+          </div>
 
           {/* Botón Excel */}
-          <button onClick={handleExport} className="flex items-center justify-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all text-sm font-medium whitespace-nowrap">
-            <FileSpreadsheet size={18} className="text-green-600" />
-            Excel
+          <button 
+            onClick={handleExport} 
+            className="flex items-center justify-center gap-2 bg-[#1d5c36]/40 backdrop-blur-md border border-[#34a853]/40 text-[#4ade80] px-5 py-3 rounded-xl hover:bg-[#1d5c36]/60 hover:border-[#34a853]/60 transition-all text-sm font-bold whitespace-nowrap shadow-lg shadow-black/20"
+          >
+            <FileSpreadsheet size={18} />
+            Exportar Excel
           </button>
         </div>
-      </div>
+      </header>
 
       {/* Interfaz de Tabla Responsiva */}
-      <div className="bg-white rounded-3xl border border-pink-100 shadow-sm overflow-hidden">
+      <div className="bg-white/5 backdrop-blur-2xl rounded-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-gray-400 animate-pulse font-medium">
+          <div className="p-16 flex justify-center items-center gap-3 text-gray-400 animate-pulse font-medium">
+            <div className="w-6 h-6 border-2 border-white/20 border-t-[#ff2a70] rounded-full animate-spin"></div>
             Cargando historial de ventas...
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
-              <thead className="bg-pink-50/50 text-gray-600 border-b border-pink-100">
+              <thead className="bg-black/30 text-gray-400 text-xs uppercase tracking-wider font-semibold border-b border-white/10">
                 <tr>
-                  <th className="px-4 md:px-6 py-4 font-medium">Fecha</th>
-                  <th className="px-4 md:px-6 py-4 font-medium">Cliente</th>
-                  <th className="px-4 md:px-6 py-4 font-medium">Monto</th>
-                  <th className="px-4 md:px-6 py-4 font-semibold text-pink-600 bg-pink-50/50">Comisión (1%)</th>
-                  <th className="px-4 md:px-6 py-4 font-medium">Comprobante</th>
-                  <th className="px-4 md:px-6 py-4 font-medium text-center">Gestión</th>
+                  <th className="px-6 py-5">Fecha</th>
+                  <th className="px-6 py-5">Cliente</th>
+                  <th className="px-6 py-5">Monto Total</th>
+                  <th className="px-6 py-5 text-[#ff2a70]">Comisión (1%)</th>
+                  <th className="px-6 py-5 text-center">Comprobante</th>
+                  <th className="px-6 py-5 text-center">Gestión</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-white/5">
                 {filteredSales.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="px-6 py-12 text-center text-gray-500 font-medium">
+                    <td colSpan="6" className="px-6 py-12 text-center text-gray-500 font-medium bg-white/5">
                       No se encontraron ventas para esta búsqueda o fecha.
                     </td>
                   </tr>
                 ) : (
                   filteredSales.map((sale) => (
-                    <tr key={sale.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-4 md:px-6 py-4 text-gray-600">
+                    <tr key={sale.id} className="bg-white/3 hover:bg-white/10 transition-colors group">
+                      <td className="px-6 py-4 text-gray-400 font-medium group-hover:text-gray-300">
                         {sale.fecha}
                       </td>
-                      <td className="px-4 md:px-6 py-4 font-medium text-gray-800">
+                      <td className="px-6 py-4 font-bold text-gray-200 group-hover:text-white">
                         {sale.nombre_cliente}
                       </td>
-                      <td className="px-4 md:px-6 py-4 text-gray-600">
+                      <td className="px-6 py-4 text-gray-300 font-medium group-hover:text-gray-200">
                         S/ {parseFloat(sale.monto_total || 0).toFixed(2)}
                       </td>
-                      <td className="px-4 md:px-6 py-4 font-bold text-pink-500 bg-pink-50/30">
+                      <td className="px-6 py-4 font-bold text-[#ff2a70] drop-shadow-[0_0_5px_rgba(255,42,112,0.3)] group-hover:drop-shadow-[0_0_8px_rgba(255,42,112,0.6)]">
                         S/ {parseFloat(sale.comision || 0).toFixed(2)}
                       </td>
-                      <td className="px-4 md:px-6 py-4">
+                      <td className="px-6 py-4">
                         {/* Botones de visualización PDF */}
                         {sale.url_pdf ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center justify-center gap-2">
                             <button
                               onClick={() => window.open(sale.url_pdf, '_blank')}
-                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-pink-600 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors border border-transparent shadow-sm"
+                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-white/10 hover:bg-[#ff2a70] hover:shadow-[0_0_15px_rgba(255,42,112,0.5)] rounded-lg transition-all border border-white/20 hover:border-transparent"
                             >
                               <ExternalLink size={14} />
                               Ver PDF
                             </button>
                             <button
                               onClick={() => handleDownloadPDF(sale.url_pdf, sale.nombre_cliente)}
-                              className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-pink-600 bg-gray-50 hover:bg-pink-50 rounded-lg transition-colors border border-gray-100 shadow-sm"
+                              className="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white bg-white/5 hover:bg-white/20 rounded-lg transition-all border border-white/10"
                               title="Descargar PDF"
                             >
                               <Download size={14} />
                             </button>
                           </div>
                         ) : (
-                          <span className="text-gray-400 text-xs italic">Sin PDF</span>
+                          <span className="flex justify-center text-gray-500 text-xs italic">Sin PDF</span>
                         )}
                       </td>
-                      <td className="px-4 md:px-6 py-4 text-center">
-                        <button 
-                          onClick={() => handleDelete(sale.id)}
-                          className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors"
-                          title="Eliminar venta"
-                        >
-                          <Trash2 size={18} />
-                        </button>
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex justify-center">
+                          <button 
+                            onClick={() => handleDelete(sale.id)}
+                            className="text-gray-500 hover:text-red-400 hover:bg-red-500/10 p-2 rounded-xl transition-all border border-transparent hover:border-red-500/20"
+                            title="Eliminar venta"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))

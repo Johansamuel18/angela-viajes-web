@@ -2,5 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Los colores y diseños ya están manejados por las clases
-   de Tailwind en tus componentes de React. */
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-[#1a0512] via-[#2a081d] to-[#12030a] text-white min-h-screen selection:bg-[#ff2a70]/30 selection:text-white antialiased;
+  }
+}
