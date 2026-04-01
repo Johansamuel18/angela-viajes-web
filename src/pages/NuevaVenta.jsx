@@ -96,11 +96,11 @@ export default function NuevaVenta() {
   const labelStyles = "text-sm font-medium text-gray-300 block mb-2";
 
   return (
-    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8 max-w-2xl">
-      <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">Registrar Nueva Venta</h2>
+    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 md:p-8 max-w-2xl mx-auto">
+      <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8 tracking-tight text-center md:text-left">Registrar Nueva Venta</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div>
             <label className={labelStyles}>Fecha</label>
             <input 
@@ -140,7 +140,7 @@ export default function NuevaVenta() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div>
             <label className={labelStyles}>Monto Total (S/)</label>
             <input 
